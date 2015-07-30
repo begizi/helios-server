@@ -14,4 +14,4 @@ clean:
 	go clean -i -r helios/...
 
 gin:
-	@gin -a 8888 -p 8989 -t src/helios
+	cd src/helios && gin -i -a 8888 -p 8989
