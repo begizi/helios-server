@@ -1,8 +1,10 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"net/http"
+	"os"
 
 	"github.com/gin-gonic/gin"
 	"github.com/markbates/goth/gothic"
@@ -25,6 +27,19 @@ func providerCallback(c *gin.Context) {
 
 	user.Username = githubUser.RawData["login"].(string)
 	user.AccessToken = githubUser.AccessToken
+
+	// If the user doesn't exist yet
+	if _, ok := Users[user.Username]; !ok {
+		userFile, err := os.OpenFile(usersFilename, os.O_APPEND|os.O_WRONLY, 0644)
+		defer userFile.Close()
+
+		_, err = userFile.WriteString(fmt.Sprintf("%s,%s\n", user.Username, user.AccessToken))
+		if err != nil {
+			log.Fatalf("Failed to write new users to CSV")
+		}
+	} else {
+		fmt.Println("User Already Exists")
+	}
 
 	c.JSON(200, user)
 }

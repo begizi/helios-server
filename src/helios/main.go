@@ -27,12 +27,11 @@ var (
 	port          string
 	publicDir     string
 	usersFilename string // User Access Tokens file path
-	Users         []User
 	LastEvent     Event
-	usersFile     *os.File
 )
 
 var eventChan = make(chan []github.Event)
+var Users = make(map[string]User)
 
 type Event struct {
 	sync.RWMutex
@@ -71,12 +70,12 @@ func authorization() {
 }
 
 func loadUsersCSV() {
-	var err error
 	// Open and parse existing users from the uat file
-	usersFile, err = os.OpenFile(usersFilename, os.O_RDWR|os.O_CREATE, 0664)
+	usersFile, err := os.OpenFile(usersFilename, os.O_RDWR|os.O_CREATE, 0664)
 	if err != nil {
 		log.Fatalf("Failed to open users file", err)
 	}
+	defer usersFile.Close()
 
 	csvReader := csv.NewReader(usersFile)
 	rawCSV, err := csvReader.ReadAll()
@@ -86,7 +85,7 @@ func loadUsersCSV() {
 
 	for _, row := range rawCSV {
 		u := User{row[0], row[1]}
-		Users = append(Users, u)
+		Users[u.Username] = u
 	}
 }
 
@@ -110,7 +109,6 @@ func main() {
 
 	// Load registered users from csv
 	loadUsersCSV()
-	defer usersFile.Close()
 
 	// Set the initial last event time to now
 	LastEvent.EventTime = time.Now()
