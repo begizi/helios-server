@@ -12,11 +12,6 @@ func setupRoutes(r *gin.Engine) {
 	//Oauth Authenticaton and Callbacks
 	r.GET("/auth/github/callback", providerCallback)
 	r.GET("/auth/github", providerAuth)
-
-	r.GET("/ping", func(c *gin.Context) {
-		c.JSON(200, gin.H{"hello": "world"})
-	})
-
 }
 
 func providerCallback(c *gin.Context) {
