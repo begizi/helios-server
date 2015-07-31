@@ -1,17 +1,17 @@
-package main
+package helios
 
 import (
 	"fmt"
 	"log"
 
-	"github.com/google/go-github/github"
 	"github.com/googollee/go-socket.io"
 )
 
-func setupSocketIO() (*socketio.Server, error) {
+func initSocket() *socketio.Server {
 	server, err := socketio.NewServer(nil)
 	if err != nil {
-		return nil, err
+		log.Fatalf("Error on socket.io server", err.Error())
+		return nil
 	}
 
 	server.On("connection", func(so socketio.Socket) {
@@ -26,16 +26,15 @@ func setupSocketIO() (*socketio.Server, error) {
 		log.Fatalf("Error on socket.io server", err.Error())
 	})
 
-	return server, nil
+	return server
 }
 
-func startSocketPusher(s *socketio.Server, c <-chan []github.Event) error {
+func (h *Engine) NewBroadcastChannel(room, message string) {
 	go func() {
 		for {
-			events := <-c
-			s.BroadcastTo("feedbag", "activity", events)
+			msg := <-h.SocketChan
+			fmt.Println("Got message to broadcast")
+			h.Socket.BroadcastTo(room, message, msg)
 		}
 	}()
-
-	return nil
 }
