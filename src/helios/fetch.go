@@ -18,11 +18,15 @@ func (t tokenSource) Token() (*oauth2.Token, error) {
 	return t.token, nil
 }
 
-func startExistingUsers(c chan<- []github.Event) {
+func startExistingUsers() {
 	fmt.Println("Starting go routines")
 	for _, u := range Users {
-		go userRoutine(u, c)
+		startUser(u)
 	}
+}
+
+func startUser(u User) {
+	go userRoutine(u, eventChan)
 }
 
 func userRoutine(u User, c chan<- []github.Event) error {

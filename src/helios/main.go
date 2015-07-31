@@ -114,7 +114,7 @@ func main() {
 	LastEvent.EventTime = time.Now()
 
 	// Start existing users go routines
-	startExistingUsers(eventChan)
+	startExistingUsers()
 
 	// Create Engine Instance
 	r := gin.Default()

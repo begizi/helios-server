@@ -37,6 +37,10 @@ func providerCallback(c *gin.Context) {
 		if err != nil {
 			log.Fatalf("Failed to write new users to CSV")
 		}
+
+		Users[user.Username] = user
+		startUser(user)
+
 	} else {
 		fmt.Println("User Already Exists")
 	}
