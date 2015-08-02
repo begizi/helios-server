@@ -5,6 +5,7 @@ import (
 	"helios/cors"
 	"helios/github"
 	"helios/helios"
+	"helios/slack"
 	"helios/static"
 	"os"
 
@@ -37,6 +38,7 @@ func main() {
 	h.Use(cors.Service())
 	h.Use(static.Service())
 	h.Use(github.Service())
+	h.Use(slack.Service())
 
 	// Initialize helios
 	h.Run(port)
