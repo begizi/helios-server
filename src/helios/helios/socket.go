@@ -30,12 +30,13 @@ func initSocket() *socketio.Server {
 }
 
 func (h *Engine) NewBroadcastChannel(room, message string) chan interface{} {
+	chReceiver := make(chan interface{})
 	go func() {
 		for {
-			msg := <-h.SocketChan
+			msg := <-chReceiver
 			fmt.Println("Got message to broadcast")
 			h.Socket.BroadcastTo(room, message, msg)
 		}
 	}()
-	return h.SocketChan
+	return chReceiver
 }
