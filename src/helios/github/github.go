@@ -45,9 +45,6 @@ func Plugin() helios.MiddlewareFunc {
 		githubKey := os.Getenv("GITHUB_KEY")
 		githubSecret := os.Getenv("GITHUB_SECRET")
 
-		// Set the socket communication channel as a global
-		EventChan = h.SocketChan
-
 		// Set the initial last event time to now
 		LastEvent.EventTime = time.Now()
 
@@ -60,8 +57,8 @@ func Plugin() helios.MiddlewareFunc {
 		h.HTTPEngine.GET("/auth/github/callback", providerCallback)
 		h.HTTPEngine.GET("/auth/github", providerAuth)
 
-		// Start socket broadcast channel
-		h.NewBroadcastChannel("helios", "github")
+		// Start socket broadcast channel and save the channel to a global
+		EventChan = h.NewBroadcastChannel("helios", "github")
 
 		// Load registered users
 		err := loadUsersCSV()

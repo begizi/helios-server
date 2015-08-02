@@ -29,7 +29,7 @@ func initSocket() *socketio.Server {
 	return server
 }
 
-func (h *Engine) NewBroadcastChannel(room, message string) {
+func (h *Engine) NewBroadcastChannel(room, message string) chan interface{} {
 	go func() {
 		for {
 			msg := <-h.SocketChan
@@ -37,4 +37,5 @@ func (h *Engine) NewBroadcastChannel(room, message string) {
 			h.Socket.BroadcastTo(room, message, msg)
 		}
 	}()
+	return h.SocketChan
 }
