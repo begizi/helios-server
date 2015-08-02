@@ -42,9 +42,11 @@ func userRoutine(u User, c chan<- interface{}) error {
 			log.Fatalf("Problem retrieving events for user", u.Username, err.Error())
 		}
 
-		newEventTime := *events[0].CreatedAt
+		newEventTime := LastEvent.EventTime
 
-		fmt.Println(newEventTime)
+		if len(events) > 0 {
+			newEventTime = *events[0].CreatedAt
+		}
 
 		// read in last event and compare to new event time
 		LastEvent.Lock()
