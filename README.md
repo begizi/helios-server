@@ -9,19 +9,8 @@ This is used for building the release but can also be used for development:
     ./bin/helios
 
 
-## Enable Auto Compile (optional)
-The strategy I use for rapid development with auto compiling:
+## Auto Compile (for rapid development)
 
-Add a default GOPATH and add that GOPATH to the PATH:
+Use the serve build command to auto compile when changes are made:
 
-    export GOPATH=/Users/<username>/go
-    export PATH=$GOPATH/bin/:$PATH
-
-Install the gin watch tool and verify it installed correctly:
-
-    go get github.com/codegangsta/gin
-    gin -h
-
-Use the gin build command to auto compile when changes are made:
-
-    make gin
+    make serve
