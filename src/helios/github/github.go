@@ -64,7 +64,7 @@ func Service() helios.ServiceHandler {
 		})
 
 		// Start socket broadcast channel and save the channel to a global
-		EventChan = h.NewBroadcastChannel("helios", "github")
+		EventChan = h.NewBroadcastChannel("github")
 
 		// Load registered users
 		err := loadUsersCSV()
