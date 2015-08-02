@@ -11,10 +11,10 @@ type Engine struct {
 	HTTPEngine *gin.Engine
 	Socket     *socketio.Server
 	SocketChan chan interface{}
-	middleware []MiddlewareFunc
+	services   []ServiceHandler
 }
 
-type MiddlewareFunc func(*Engine) error
+type ServiceHandler func(*Engine) error
 
 func New() *Engine {
 	// package instance of the helios type
@@ -27,23 +27,23 @@ func New() *Engine {
 	return server
 }
 
-func (h *Engine) Use(mw MiddlewareFunc) {
-	h.middleware = append(h.middleware, mw)
+func (h *Engine) Use(mw ServiceHandler) {
+	h.services = append(h.services, mw)
 }
 
 func (h *Engine) Run(port string) {
-	// Start middleware services
-	h.startMiddleware()
+	// Start services services
+	h.startServices()
 
-	// Start engine now that all middelware have loaded
+	// Start engine now that all services have loaded
 	h.HTTPEngine.Run(":" + port)
 }
 
-func (h *Engine) startMiddleware() {
-	for _, mw := range h.middleware {
+func (h *Engine) startServices() {
+	for _, mw := range h.services {
 		err := mw(h)
 		if err != nil {
-			fmt.Println("Failed to start middleware: ", err)
+			fmt.Println("Failed to start service: ", err)
 		}
 	}
 }

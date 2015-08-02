@@ -7,7 +7,7 @@ import (
 	"github.com/gin-gonic/contrib/static"
 )
 
-func Plugin() helios.MiddlewareFunc {
+func Service() helios.ServiceHandler {
 	return func(h *helios.Engine) error {
 		publicDir := "public"
 
