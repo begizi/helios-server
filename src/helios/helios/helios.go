@@ -10,7 +10,6 @@ import (
 type Engine struct {
 	HTTPEngine *gin.Engine
 	Socket     *socketio.Server
-	SocketChan chan interface{}
 	services   []ServiceHandler
 }
 
@@ -21,7 +20,6 @@ func New() *Engine {
 	var server = &Engine{
 		HTTPEngine: gin.Default(),
 		Socket:     initSocket(),
-		SocketChan: make(chan interface{}),
 	}
 
 	return server
