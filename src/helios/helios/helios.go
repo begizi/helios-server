@@ -5,7 +5,6 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/googollee/go-socket.io"
-	"github.com/tommy351/gin-cors"
 )
 
 type Engine struct {
@@ -20,6 +19,7 @@ type MiddlewareFunc func(*Engine) error
 func New() *Engine {
 	// package instance of the helios type
 	var server = &Engine{
+		HTTPEngine: gin.Default(),
 		Socket:     initSocket(),
 		SocketChan: make(chan interface{}),
 	}
@@ -32,9 +32,6 @@ func (h *Engine) Use(mw MiddlewareFunc) {
 }
 
 func (h *Engine) Run(port string) {
-	// Setup HTTP Engine
-	h.HTTPEngine = initHTTPEngine(port)
-
 	// Start middleware services
 	h.startMiddleware()
 
@@ -49,19 +46,4 @@ func (h *Engine) startMiddleware() {
 			fmt.Println("Failed to start middleware: ", err)
 		}
 	}
-}
-
-func initHTTPEngine(port string) *gin.Engine {
-	// Create Engine Instance
-	r := gin.Default()
-
-	// Server settings
-	r.RedirectTrailingSlash = true
-	r.RedirectFixedPath = true
-	r.HandleMethodNotAllowed = true
-
-	// Middleware
-	r.Use(cors.Middleware(cors.Options{AllowCredentials: true}))
-
-	return r
 }

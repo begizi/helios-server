@@ -2,6 +2,7 @@ package main
 
 import (
 	"flag"
+	"helios/cors"
 	"helios/github"
 	"helios/helios"
 	"helios/static"
@@ -33,8 +34,9 @@ func main() {
 
 	h := helios.New()
 
-	h.Use(github.Plugin())
+	h.Use(cors.Plugin())
 	h.Use(static.Plugin())
+	h.Use(github.Plugin())
 
 	// Initialize helios
 	h.Run(port)
