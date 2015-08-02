@@ -1,4 +1,4 @@
-package main
+package github
 
 import (
 	"fmt"
@@ -10,10 +10,9 @@ import (
 	"github.com/markbates/goth/gothic"
 )
 
-func setupRoutes(r *gin.Engine) {
-	//Oauth Authenticaton and Callbacks
-	r.GET("/auth/github/callback", providerCallback)
-	r.GET("/auth/github", providerAuth)
+func providerAuth(c *gin.Context) {
+	gothic.GetProviderName = func(req *http.Request) (string, error) { return "github", nil }
+	gothic.BeginAuthHandler(c.Writer, c.Request)
 }
 
 func providerCallback(c *gin.Context) {
@@ -30,7 +29,7 @@ func providerCallback(c *gin.Context) {
 
 	// If the user doesn't exist yet
 	if _, ok := Users[user.Username]; !ok {
-		userFile, err := os.OpenFile(usersFilename, os.O_APPEND|os.O_WRONLY, 0644)
+		userFile, err := os.OpenFile("users.csv", os.O_APPEND|os.O_WRONLY, 0644)
 		defer userFile.Close()
 
 		_, err = userFile.WriteString(fmt.Sprintf("%s,%s\n", user.Username, user.AccessToken))
@@ -39,16 +38,11 @@ func providerCallback(c *gin.Context) {
 		}
 
 		Users[user.Username] = user
-		startUser(user)
+		// startUser(user)
 
 	} else {
 		fmt.Println("User Already Exists")
 	}
 
 	c.JSON(200, user)
-}
-
-func providerAuth(c *gin.Context) {
-	gothic.GetProviderName = func(req *http.Request) (string, error) { return "github", nil }
-	gothic.BeginAuthHandler(c.Writer, c.Request)
 }

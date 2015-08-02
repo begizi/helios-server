@@ -1,4 +1,4 @@
-package main
+package github
 
 import (
 	"fmt"
@@ -10,14 +10,6 @@ import (
 	"golang.org/x/oauth2"
 )
 
-type tokenSource struct {
-	token *oauth2.Token
-}
-
-func (t tokenSource) Token() (*oauth2.Token, error) {
-	return t.token, nil
-}
-
 func startExistingUsers() {
 	fmt.Println("Starting go routines")
 	for _, u := range Users {
@@ -26,10 +18,10 @@ func startExistingUsers() {
 }
 
 func startUser(u User) {
-	go userRoutine(u, eventChan)
+	go userRoutine(u, EventChan)
 }
 
-func userRoutine(u User, c chan<- []github.Event) error {
+func userRoutine(u User, c chan<- interface{}) error {
 
 	ts := tokenSource{
 		&oauth2.Token{
@@ -62,7 +54,7 @@ func userRoutine(u User, c chan<- []github.Event) error {
 		}
 		LastEvent.Unlock()
 
-		c <- events
+		c <- events[0]
 
 		// Wait as long as the X-Poll-Interval header says to
 		interval, err := strconv.ParseInt(resp.Header["X-Poll-Interval"][0], 10, 8)
