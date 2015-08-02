@@ -7,6 +7,8 @@ import (
 	"github.com/googollee/go-socket.io"
 )
 
+const socketRoom = "helios"
+
 func initSocket() *socketio.Server {
 	server, err := socketio.NewServer(nil)
 	if err != nil {
@@ -16,7 +18,7 @@ func initSocket() *socketio.Server {
 
 	server.On("connection", func(so socketio.Socket) {
 		fmt.Printf("New socket.io connection: %s", so.Id())
-		so.Join("helios")
+		so.Join(socketRoom)
 		so.On("disconnection", func() {
 			// no op
 		})
@@ -29,13 +31,13 @@ func initSocket() *socketio.Server {
 	return server
 }
 
-func (h *Engine) NewBroadcastChannel(room, message string) chan interface{} {
+func (h *Engine) NewBroadcastChannel(message string) chan interface{} {
 	chReceiver := make(chan interface{})
 	go func() {
 		for {
 			msg := <-chReceiver
 			fmt.Println("Got message to broadcast")
-			h.Socket.BroadcastTo(room, message, msg)
+			h.Socket.BroadcastTo(socketRoom, message, msg)
 		}
 	}()
 	return chReceiver
