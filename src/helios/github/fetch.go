@@ -2,12 +2,12 @@ package github
 
 import (
 	"fmt"
-	"log"
 	"strconv"
 	"time"
 
 	"github.com/google/go-github/github"
 	"golang.org/x/oauth2"
+	log "gopkg.in/inconshreveable/log15.v2"
 )
 
 func startExistingUsers() {
@@ -39,7 +39,7 @@ func userRoutine(u User, c chan<- interface{}) error {
 	for {
 		events, resp, err := client.Activity.ListEventsPerformedByUser(u.Username, false, &opts)
 		if err != nil {
-			log.Fatalf("Problem retrieving events for user", u.Username, err.Error())
+			log.Warn("Problem retrieving events for user", "username", u.Username, "error", err.Error())
 		}
 
 		newEventTime := *events[0].CreatedAt

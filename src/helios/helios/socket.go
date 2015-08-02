@@ -2,9 +2,9 @@ package helios
 
 import (
 	"fmt"
-	"log"
 
 	"github.com/googollee/go-socket.io"
+	log "gopkg.in/inconshreveable/log15.v2"
 )
 
 const socketRoom = "helios"
@@ -12,7 +12,7 @@ const socketRoom = "helios"
 func initSocket() *socketio.Server {
 	server, err := socketio.NewServer(nil)
 	if err != nil {
-		log.Fatalf("Error on socket.io server", err.Error())
+		fmt.Println("Failed to start socket server")
 		return nil
 	}
 
@@ -25,7 +25,7 @@ func initSocket() *socketio.Server {
 	})
 
 	server.On("error", func(so socketio.Socket, err error) {
-		log.Fatalf("Error on socket.io server", err.Error())
+		log.Error("Error on socket.io server", "error", err.Error())
 	})
 
 	return server
@@ -36,7 +36,7 @@ func (h *Engine) NewBroadcastChannel(message string) chan interface{} {
 	go func() {
 		for {
 			msg := <-chReceiver
-			fmt.Println("Got message to broadcast")
+			h.Info("Got message to broadcast", "socket", message)
 			h.Socket.BroadcastTo(socketRoom, message, msg)
 		}
 	}()
