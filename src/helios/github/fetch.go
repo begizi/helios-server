@@ -51,10 +51,9 @@ func userRoutine(u User, c chan<- interface{}) error {
 		dur := LastEvent.EventTime.Sub(newEventTime)
 		if dur.Seconds() > 0.0 {
 			LastEvent.EventTime = newEventTime
+			c <- events[0]
 		}
 		LastEvent.Unlock()
-
-		c <- events[0]
 
 		// Wait as long as the X-Poll-Interval header says to
 		interval, err := strconv.ParseInt(resp.Header["X-Poll-Interval"][0], 10, 8)
