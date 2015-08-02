@@ -41,7 +41,7 @@ func loadUsersCSV() error {
 	return nil
 }
 
-func Plugin() helios.MiddlewareFunc {
+func Service() helios.ServiceHandler {
 	return func(h *helios.Engine) error {
 		githubKey := os.Getenv("GITHUB_KEY")
 		githubSecret := os.Getenv("GITHUB_SECRET")

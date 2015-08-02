@@ -34,9 +34,9 @@ func main() {
 
 	h := helios.New()
 
-	h.Use(cors.Plugin())
-	h.Use(static.Plugin())
-	h.Use(github.Plugin())
+	h.Use(cors.Service())
+	h.Use(static.Service())
+	h.Use(github.Service())
 
 	// Initialize helios
 	h.Run(port)

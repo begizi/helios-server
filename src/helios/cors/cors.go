@@ -6,7 +6,7 @@ import (
 	"github.com/tommy351/gin-cors"
 )
 
-func Plugin() helios.MiddlewareFunc {
+func Service() helios.ServiceHandler {
 	return func(h *helios.Engine) error {
 
 		h.HTTPEngine.Use(cors.Middleware(cors.Options{AllowCredentials: true}))
