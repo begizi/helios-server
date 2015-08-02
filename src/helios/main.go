@@ -4,6 +4,7 @@ import (
 	"flag"
 	"helios/github"
 	"helios/helios"
+	"helios/static"
 	"os"
 
 	_ "github.com/joho/godotenv/autoload"
@@ -33,6 +34,7 @@ func main() {
 	h := helios.New()
 
 	h.Use(github.Plugin())
+	h.Use(static.Plugin())
 
 	// Initialize helios
 	h.Run(port)
