@@ -5,6 +5,7 @@ src/github.com
 src/golang.org
 src/gopkg.in
 src/code.google.com
+tmp/
 *.env
-gin-bin
 users.csv
+fresh

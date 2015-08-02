@@ -1,4 +1,4 @@
-.PHONY: deps fmt build clean gin
+.PHONY: deps fmt build clean serve
 export GOPATH=$(shell pwd)
 
 deps:
@@ -13,5 +13,9 @@ build: deps
 clean:
 	go clean -i -r helios/...
 
-gin:
-	cd src/helios && gin -i -a 8888 -p 8989
+serve:
+ifeq ("$(wildcard $(./bin/fresh))","")
+	@go get github.com/pilu/fresh
+	@go install github.com/pilu/fresh
+endif
+	@./bin/fresh -c fresh.conf
