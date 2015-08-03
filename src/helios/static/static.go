@@ -16,7 +16,7 @@ func Service() helios.ServiceHandler {
 		}
 
 		// Setup static file server on HTTPEngine
-		h.HTTPEngine.Use(static.Serve("/", static.LocalFile(publicDir, false)))
+		h.HTTPEngine.Use(static.Serve("/", static.LocalFile(publicDir, true)))
 
 		return nil
 	}
