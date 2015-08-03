@@ -1,28 +1,34 @@
 package helios
 
 import (
-	"fmt"
+	"os"
 
 	"github.com/gin-gonic/gin"
 	"github.com/googollee/go-socket.io"
+	log "gopkg.in/inconshreveable/log15.v2"
 )
 
 type Engine struct {
 	HTTPEngine *gin.Engine
 	Socket     *socketio.Server
 	services   []ServiceHandler
+	log.Logger
 }
 
 type ServiceHandler func(*Engine) error
 
 func New() *Engine {
 	// package instance of the helios type
-	var server = &Engine{
+	engine := &Engine{
 		HTTPEngine: gin.Default(),
 		Socket:     initSocket(),
+		Logger:     log.New(),
 	}
 
-	return server
+	fileHandler, _ := log.FileHandler("./log.debug", log.LogfmtFormat())
+	engine.SetHandler(log.MultiHandler(log.LvlFilterHandler(log.LvlWarn, fileHandler), log.StreamHandler(os.Stdout, log.TerminalFormat())))
+
+	return engine
 }
 
 func (h *Engine) Use(mw ServiceHandler) {
@@ -41,7 +47,7 @@ func (h *Engine) startServices() {
 	for _, mw := range h.services {
 		err := mw(h)
 		if err != nil {
-			fmt.Println("Failed to start service: ", err)
+			h.Warn("Failed to start service: ", err)
 		}
 	}
 }

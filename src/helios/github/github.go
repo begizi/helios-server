@@ -4,13 +4,13 @@ import (
 	"encoding/csv"
 	"fmt"
 	"helios/helios"
-	"log"
 	"os"
 	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/markbates/goth"
 	githubProvider "github.com/markbates/goth/providers/github"
+	log "gopkg.in/inconshreveable/log15.v2"
 )
 
 var LastEvent Event
@@ -21,7 +21,7 @@ func loadUsersCSV() error {
 	// Open and parse existing users from the uat file
 	usersFile, err := os.OpenFile("users.csv", os.O_RDWR|os.O_CREATE, 0664)
 	if err != nil {
-		log.Fatalf("Failed to open users file", err)
+		log.Error("Failed to open users file", "error", err.Error())
 		return err
 	}
 	defer usersFile.Close()
@@ -29,7 +29,7 @@ func loadUsersCSV() error {
 	csvReader := csv.NewReader(usersFile)
 	rawCSV, err := csvReader.ReadAll()
 	if err != nil {
-		log.Fatalf("Failed to read CSV file", err)
+		log.Error("Failed to read CSV file", "error", err.Error())
 		return err
 	}
 
