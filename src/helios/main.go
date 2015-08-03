@@ -13,14 +13,11 @@ import (
 	_ "github.com/joho/godotenv/autoload"
 )
 
-var (
-	port          string
-	usersFilename string // User Access Tokens file path
-)
+var port string
 
-func flags() {
+func main() {
+	// Initialize command line args
 	flag.StringVar(&port, "port", "8989", "Port to run the server on")
-	flag.StringVar(&usersFilename, "users", "users.csv", "Path to UAT (User Access Tokens) location. Used to store user github tokens")
 
 	// Use env variables if they are defined
 	if len(os.Getenv("PORT")) > 0 {
@@ -28,11 +25,6 @@ func flags() {
 	}
 
 	flag.Parse()
-}
-
-func main() {
-	// Initialize command line args
-	flags()
 
 	h := helios.New()
 
