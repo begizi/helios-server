@@ -7,6 +7,7 @@ import (
 	"helios/helios"
 	"helios/slack"
 	"helios/static"
+	"helios/weather"
 	"os"
 
 	_ "github.com/joho/godotenv/autoload"
@@ -37,6 +38,7 @@ func main() {
 
 	h.Use(cors.Service())
 	h.Use(static.Service())
+	h.Use(weather.Service())
 	h.Use(github.Service())
 	h.Use(slack.Service())
 
