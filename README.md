@@ -1,5 +1,7 @@
 # Helios Server
 
+This project now lives in the helios repo. Check it out at [mojotech/helios](https://github.com/mojotech/helios)
+
 
 ## Compiling
 This is used for building the release but can also be used for development:
